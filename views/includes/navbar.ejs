@@ -1,22 +1,87 @@
-<nav class="navbar navbar-expand-lg sticky-top bg-body-light border-bottom">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"></i></a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link " aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/listings">All Listing</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/listings/new">add Listing</a>
-        </li>
-        
-      </ul>
+<nav class="navbar navbar-expand-md sticky-top bg-white border-bottom airbnb-nav">
+  <div class="container-fluid px-3 px-md-5">
+    <!-- Brand Logo -->
+    <a class="navbar-brand d-flex align-items-center gap-2" href="/listings">
+      <i class="fa-brands fa-airbnb airbnb-brand-icon"></i>
+      <span class="airbnb-brand-text">airbnb</span>
+    </a>
+
+    <!-- Center Search Bar (Desktop) -->
+    <div class="airbnb-search-wrapper d-none d-md-flex align-items-center mx-auto">
+      <form action="/listings" method="GET" class="airbnb-search-bar" id="searchForm">
+        <div class="search-item-btn destination-box">
+          <input
+            type="text"
+            name="q"
+            id="searchInput"
+            class="search-input"
+            placeholder="Anywhere"
+            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+            autocomplete="off"
+          />
+        </div>
+        <span class="search-divider"></span>
+        <button type="button" class="search-item-btn d-none d-lg-block text-secondary">Any week</button>
+        <span class="search-divider d-none d-lg-block"></span>
+        <button type="button" class="search-item-btn d-none d-lg-block text-secondary">Add guests</button>
+        <button type="submit" class="search-circle-btn" aria-label="Search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+      </form>
     </div>
+
+    <!-- Right Side Host & User Menu -->
+    <div class="airbnb-user-nav d-flex align-items-center gap-2">
+      <a href="/listings/new" class="airbnb-host-btn d-none d-sm-inline-block">
+        Airbnb your home
+      </a>
+
+      <button class="airbnb-globe-btn d-none d-sm-inline-flex align-items-center justify-content-center" title="Choose language">
+        <i class="fa-solid fa-globe"></i>
+      </button>
+
+      <!-- User Dropdown Pill -->
+      <div class="dropdown">
+        <button
+          class="airbnb-profile-pill d-flex align-items-center gap-2"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          aria-label="User menu"
+        >
+          <i class="fa-solid fa-bars"></i>
+          <div class="avatar-circle">
+            <i class="fa-solid fa-user"></i>
+          </div>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end airbnb-dropdown shadow-lg border-0 rounded-4 mt-2 py-2">
+          <li><a class="dropdown-item fw-bold" href="/listings/new">Airbnb your home</a></li>
+          <li><a class="dropdown-item" href="/listings">Explore all stays</a></li>
+          <li><hr class="dropdown-divider my-2" /></li>
+          <li>
+            <a class="dropdown-item d-flex align-items-center gap-2" href="https://github.com/krishna-Deshmukh13/AirBnb_Clone" target="_blank" rel="noopener">
+              <i class="fa-brands fa-github text-dark"></i> GitHub Repository
+            </a>
+          </li>
+          <li><a class="dropdown-item" href="https://github.com/krishna-Deshmukh13" target="_blank" rel="noopener">Developer Profile</a></li>
+          <li><hr class="dropdown-divider my-2" /></li>
+          <li><a class="dropdown-item text-muted" href="#help">Help Centre</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Search Bar (<768px) -->
+  <div class="container-fluid px-3 pt-2 pb-1 d-md-none">
+    <form action="/listings" method="GET" class="mobile-search-bar w-100">
+      <i class="fa-solid fa-magnifying-glass search-mobile-icon"></i>
+      <input
+        type="text"
+        name="q"
+        class="mobile-search-input"
+        placeholder="Where to? · Anywhere · Any week"
+        value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+      />
+    </form>
   </div>
 </nav>

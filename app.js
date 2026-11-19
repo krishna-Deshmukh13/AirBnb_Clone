@@ -50,12 +50,21 @@ const validateListing = (req, res, next) => {
 app.get(
   "/listings",
   wrapAsync(async (req, res) => {
-    // res.send("hi, i am root");
-    // Listing.find({}).then((res)=>{
-    //     console.log(res);
-    // })
-    const allListings = await Listing.find({});
-    res.render("./listings/index.ejs", { allListings });
+    const { q } = req.query;
+    let filter = {};
+    if (q && q.trim() !== "") {
+      const regex = new RegExp(q.trim(), "i");
+      filter = {
+        $or: [
+          { title: regex },
+          { location: regex },
+          { country: regex },
+          { description: regex },
+        ],
+      };
+    }
+    const allListings = await Listing.find(filter);
+    res.render("./listings/index.ejs", { allListings, searchQuery: q || "" });
   }),
 );
 

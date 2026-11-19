@@ -1,31 +1,176 @@
 <% layout('/layouts/boilerplate') %>
-<body>
-    <h3>All Listings</h3>
-    <!-- <form action="/listings/new" method="get">
-        <button>Create new Listing</button>
-    </form> -->
-    
 
-
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
-    <% for(let listing of allListings) { %>
-    <div class="card col" >
-
-    <a href="/listings/<%= listing._id %>"  class="listing-link">
-    <img src="<%= listing.image.url %>" class="card-img-top" alt="listing image" style="height: 20rem;" >
-    <div class="card-img-overlay"></div>
-    <div class="card-body">
-    <p class="card-text">
-    <b> <%= listing.title %> </b><br>
-    &#8377;<%= listing.price.toLocaleString("en-IN") %> / night
-    </p> 
-  </div>
-</a>
-
-</div>
- <% }%>
-
+<!-- Categories Bar & Tax Toggle -->
+<div class="airbnb-filter-wrapper py-3">
+  <div class="d-flex align-items-center justify-content-between gap-3">
+    <!-- Scrollable Categories -->
+    <div class="categories-scroll-container d-flex align-items-center gap-4 flex-grow-1" id="categoryBar">
+      <div class="category-item active" data-category="all">
+        <i class="fa-solid fa-fire"></i>
+        <span>Trending</span>
+      </div>
+      <div class="category-item" data-category="beach">
+        <i class="fa-solid fa-umbrella-beach"></i>
+        <span>Beachfront</span>
+      </div>
+      <div class="category-item" data-category="cities">
+        <i class="fa-solid fa-city"></i>
+        <span>Iconic cities</span>
+      </div>
+      <div class="category-item" data-category="mountain">
+        <i class="fa-solid fa-mountain"></i>
+        <span>Mountains</span>
+      </div>
+      <div class="category-item" data-category="pools">
+        <i class="fa-solid fa-person-swimming"></i>
+        <span>Amazing pools</span>
+      </div>
+      <div class="category-item" data-category="castles">
+        <i class="fa-solid fa-fort-awesome"></i>
+        <span>Castles</span>
+      </div>
+      <div class="category-item" data-category="camping">
+        <i class="fa-solid fa-campground"></i>
+        <span>Camping</span>
+      </div>
+      <div class="category-item" data-category="rooms">
+        <i class="fa-solid fa-bed"></i>
+        <span>Rooms</span>
+      </div>
+      <div class="category-item" data-category="farms">
+        <i class="fa-solid fa-wheat-awn"></i>
+        <span>Farms</span>
+      </div>
+      <div class="category-item" data-category="arctic">
+        <i class="fa-solid fa-snowflake"></i>
+        <span>Arctic</span>
+      </div>
+      <div class="category-item" data-category="lake">
+        <i class="fa-solid fa-sailboat"></i>
+        <span>Lakefront</span>
+      </div>
+      <div class="category-item" data-category="cabins">
+        <i class="fa-solid fa-tree"></i>
+        <span>Cabins</span>
+      </div>
     </div>
- 
-  
-</html>
+
+    <!-- Right Controls: Filter button + Tax switch -->
+    <div class="d-none d-lg-flex align-items-center gap-2 flex-shrink-0">
+      <div class="tax-toggle-box d-flex align-items-center">
+        <div class="form-check form-switch m-0 d-flex align-items-center gap-2">
+          <label class="form-check-label user-select-none small fw-semibold" for="taxSwitch">
+            Display total after taxes
+          </label>
+          <input class="form-check-input" type="checkbox" role="switch" id="taxSwitch" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active Search Badge if searching -->
+<% if (typeof searchQuery !== 'undefined' && searchQuery) { %>
+  <div class="d-flex align-items-center justify-content-between mb-4 mt-2 p-3 bg-light rounded-3">
+    <div>
+      <span class="text-muted">Showing results for:</span>
+      <strong class="ms-1">"<%= searchQuery %>"</strong>
+      <span class="badge bg-secondary ms-2"><%= allListings.length %> stays</span>
+    </div>
+    <a href="/listings" class="btn btn-sm btn-outline-dark rounded-pill px-3">Clear search</a>
+  </div>
+<% } %>
+
+<!-- Listings Grid -->
+<div class="listings-grid-wrapper mb-5">
+  <% if (allListings.length === 0) { %>
+    <div class="text-center py-5 my-5">
+      <div class="mb-3">
+        <i class="fa-solid fa-magnifying-glass fs-1 text-muted"></i>
+      </div>
+      <h3>No exact matches found</h3>
+      <p class="text-muted">Try changing or clearing some of your search filters to find available stays.</p>
+      <a href="/listings" class="btn btn-dark rounded-pill px-4 mt-2">Clear all filters</a>
+    </div>
+  <% } else { %>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" id="listingsContainer">
+      <% for(let i = 0; i < allListings.length; i++) { 
+           let listing = allListings[i];
+           let ratingNum = (4.8 + ((i * 3) % 19) / 100).toFixed(2);
+           let reviewCount = 20 + ((i * 7) % 65);
+           let distance = 100 + ((i * 37) % 850);
+      %>
+        <div
+          class="col listing-item"
+          data-title="<%= listing.title.toLowerCase() %>"
+          data-location="<%= (listing.location || '').toLowerCase() %>"
+          data-country="<%= (listing.country || '').toLowerCase() %>"
+          data-desc="<%= (listing.description || '').toLowerCase() %>"
+        >
+          <div class="airbnb-card h-100">
+            <!-- Image Carousel Container -->
+            <div class="card-img-container">
+              <a href="/listings/<%= listing._id %>" class="text-decoration-none">
+                <img
+                  src="<%= listing.image.url %>"
+                  class="airbnb-card-img"
+                  alt="<%= listing.title %>"
+                  loading="lazy"
+                  onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=60';"
+                />
+              </a>
+
+              <!-- Guest Favourite Badge -->
+              <% if (i % 3 === 0) { %>
+                <div class="guest-favourite-badge">Guest favourite</div>
+              <% } %>
+
+              <!-- Wishlist Heart Button -->
+              <button
+                type="button"
+                class="wishlist-btn"
+                aria-label="Add to wishlist"
+                onclick="toggleWishlist(event, this)"
+              >
+                <i class="fa-regular fa-heart heart-empty"></i>
+                <i class="fa-solid fa-heart heart-filled d-none"></i>
+              </button>
+            </div>
+
+            <!-- Card Info -->
+            <a href="/listings/<%= listing._id %>" class="airbnb-card-link text-decoration-none text-dark">
+              <div class="airbnb-card-body pt-2">
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h6 class="listing-title fw-bold text-truncate mb-0">
+                    <%= listing.location ? listing.location + ", " + listing.country : listing.title %>
+                  </h6>
+                  <span class="listing-rating-pill d-flex align-items-center gap-1">
+                    <i class="fa-solid fa-star text-dark small"></i>
+                    <span class="rating-val fw-semibold"><%= ratingNum %></span>
+                  </span>
+                </div>
+
+                <p class="listing-subtitle text-muted text-truncate mb-0">
+                  <%= listing.title %>
+                </p>
+                <p class="listing-details text-muted small mb-1">
+                  <%= distance %> kilometers away &middot; Nov 24 – 29
+                </p>
+
+                <div class="listing-price-row mt-1">
+                  <span class="base-price">
+                    <strong class="fs-6">&#8377;<%= listing.price ? listing.price.toLocaleString("en-IN") : '0' %></strong>
+                    <span class="fw-normal text-secondary"> night</span>
+                  </span>
+                  <span class="tax-info text-muted small ms-1 d-none">
+                    (+18% GST) &middot; &#8377;<%= listing.price ? Math.round(listing.price * 1.18).toLocaleString("en-IN") : '0' %> total
+                  </span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } %>
+</div>
