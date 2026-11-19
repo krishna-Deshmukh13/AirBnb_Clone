@@ -1,0 +1,22 @@
+{
+  "name": "airbnb-clone",
+  "version": "1.0.0",
+  "description": "Full-stack Airbnb / Wanderlust clone built with Node.js, Express, MongoDB, and EJS.",
+  "author": "Krishna Deshmukh",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "init-db": "node init/index.js"
+  },
+  "dependencies": {
+    "ejs": "^6.0.1",
+    "ejs-mate": "^4.0.0",
+    "express": "^4.21.2",
+    "joi": "^18.2.3",
+    "method-override": "^3.0.0",
+    "mongoose": "^9.8.0",
+    "nodemon": "^3.1.14"
+  }
+}
